@@ -193,4 +193,13 @@ abstract class AbstractStereo<F extends IChemObject, C extends IChemObject>
             res[i] = src[perm[i]];
         return res;
     }
+
+    // apply the inverse of a permutation writen as a string starting at 1,
+    // e.g. '123456'
+    protected static <T> T[] invapply(T[] src, String perm) {
+        T[] res = src.clone();
+        for (int i = 0; i < src.length; i++)
+             res[i] = src[perm.charAt(i)-'1'];
+        return res;
+    }
 }

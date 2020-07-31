@@ -23,6 +23,7 @@
 
 package org.openscience.cdk.stereo;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.openscience.cdk.exception.InvalidSmilesException;
@@ -45,7 +46,7 @@ public class OctahedralTest {
 
     @Test public void normalizeOh() throws InvalidSmilesException {
         SmilesParser             smipar = new SmilesParser(SilentChemObjectBuilder.getInstance());
-        IAtomContainer           mol    = smipar.parseSmiles("C[Co@OH8](F)(Br)(Cl)(I)S");
+        IAtomContainer           mol    = smipar.parseSmiles("N[Co@OH8](F)(Br)(Cl)(I)S");
         Iterator<IStereoElement> ses    = mol.stereoElements().iterator();
         assertTrue(ses.hasNext());
         IStereoElement se = ses.next();
@@ -53,6 +54,9 @@ public class OctahedralTest {
         assertThat(se.getConfigOrder(), is(8));
         Octahedral oh = (Octahedral) se;
         Octahedral ohNorm = oh.normalize();
+        for (IAtom atom : ohNorm.getCarriers()) {
+            System.err.println(atom.getSymbol());
+        }
         assertThat(ohNorm.getCarriers(), is(Arrays.asList(
             mol.getAtom(0),
             mol.getAtom(2),

@@ -59,218 +59,40 @@ import java.util.List;
  */
 public final class Octahedral extends AbstractStereo<IAtom,IAtom> {
 
-    private static final int[][] PERMUTATIONS = new int[][]{
-// @OH1
-{A, B, C, D, E, F,  A, C, D, E, B, F,  A, D, E, B, C, F,  A, E, B, C, D, F,
- B, A, E, F, C, D,  B, C, A, E, F, D,  B, E, F, C, A, D,  B, F, C, A, E, D,
- C, A, B, F, D, E,  C, B, F, D, A, E,  C, D, A, B, F, E,  C, F, D, A, B, E,
- D, A, C, F, E, B,  D, C, F, E, A, B,  D, E, A, C, F, B,  D, F, E, A, C, B,
- E, A, D, F, B, C,  E, B, A, D, F, C,  E, D, F, B, A, C,  E, F, B, A, D, C,
- F, B, E, D, C, A,  F, C, B, E, D, A,  F, D, C, B, E, A,  F, E, D, C, B, A},
-// @OH2
-{A, B, E, D, C, F,  A, C, B, E, D, F,  A, D, C, B, E, F,  A, E, D, C, B, F,
- B, A, C, F, E, D,  B, C, F, E, A, D,  B, E, A, C, F, D,  B, F, E, A, C, D,
- C, A, D, F, B, E,  C, B, A, D, F, E,  C, D, F, B, A, E,  C, F, B, A, D, E,
- D, A, E, F, C, B,  D, C, A, E, F, B,  D, E, F, C, A, B,  D, F, C, A, E, B,
- E, A, B, F, D, C,  E, B, F, D, A, C,  E, D, A, B, F, C,  E, F, D, A, B, C,
- F, B, C, D, E, A,  F, C, D, E, B, A,  F, D, E, B, C, A,  F, E, B, C, D, A},
-// @OH3
-{A, B, C, D, F, E,  A, C, D, F, B, E,  A, D, F, B, C, E,  A, F, B, C, D, E,
- B, A, F, E, C, D,  B, C, A, F, E, D,  B, E, C, A, F, D,  B, F, E, C, A, D,
- C, A, B, E, D, F,  C, B, E, D, A, F,  C, D, A, B, E, F,  C, E, D, A, B, F,
- D, A, C, E, F, B,  D, C, E, F, A, B,  D, E, F, A, C, B,  D, F, A, C, E, B,
- E, B, F, D, C, A,  E, C, B, F, D, A,  E, D, C, B, F, A,  E, F, D, C, B, A,
- F, A, D, E, B, C,  F, B, A, D, E, C,  F, D, E, B, A, C,  F, E, B, A, D, C},
-// @OH4
-{A, B, C, E, D, F,  A, C, E, D, B, F,  A, D, B, C, E, F,  A, E, D, B, C, F,
- B, A, D, F, C, E,  B, C, A, D, F, E,  B, D, F, C, A, E,  B, F, C, A, D, E,
- C, A, B, F, E, D,  C, B, F, E, A, D,  C, E, A, B, F, D,  C, F, E, A, B, D,
- D, A, E, F, B, C,  D, B, A, E, F, C,  D, E, F, B, A, C,  D, F, B, A, E, C,
- E, A, C, F, D, B,  E, C, F, D, A, B,  E, D, A, C, F, B,  E, F, D, A, C, B,
- F, B, D, E, C, A,  F, C, B, D, E, A,  F, D, E, C, B, A,  F, E, C, B, D, A},
-// @OH5
-{A, B, C, F, D, E,  A, C, F, D, B, E,  A, D, B, C, F, E,  A, F, D, B, C, E,
- B, A, D, E, C, F,  B, C, A, D, E, F,  B, D, E, C, A, F,  B, E, C, A, D, F,
- C, A, B, E, F, D,  C, B, E, F, A, D,  C, E, F, A, B, D,  C, F, A, B, E, D,
- D, A, F, E, B, C,  D, B, A, F, E, C,  D, E, B, A, F, C,  D, F, E, B, A, C,
- E, B, D, F, C, A,  E, C, B, D, F, A,  E, D, F, C, B, A,  E, F, C, B, D, A,
- F, A, C, E, D, B,  F, C, E, D, A, B,  F, D, A, C, E, B,  F, E, D, A, C, B},
-// @OH6
-{A, B, C, E, F, D,  A, C, E, F, B, D,  A, E, F, B, C, D,  A, F, B, C, E, D,
- B, A, F, D, C, E,  B, C, A, F, D, E,  B, D, C, A, F, E,  B, F, D, C, A, E,
- C, A, B, D, E, F,  C, B, D, E, A, F,  C, D, E, A, B, F,  C, E, A, B, D, F,
- D, B, F, E, C, A,  D, C, B, F, E, A,  D, E, C, B, F, A,  D, F, E, C, B, A,
- E, A, C, D, F, B,  E, C, D, F, A, B,  E, D, F, A, C, B,  E, F, A, C, D, B,
- F, A, E, D, B, C,  F, B, A, E, D, C,  F, D, B, A, E, C,  F, E, D, B, A, C},
-// @OH7
-{A, B, C, F, E, D,  A, C, F, E, B, D,  A, E, B, C, F, D,  A, F, E, B, C, D,
- B, A, E, D, C, F,  B, C, A, E, D, F,  B, D, C, A, E, F,  B, E, D, C, A, F,
- C, A, B, D, F, E,  C, B, D, F, A, E,  C, D, F, A, B, E,  C, F, A, B, D, E,
- D, B, E, F, C, A,  D, C, B, E, F, A,  D, E, F, C, B, A,  D, F, C, B, E, A,
- E, A, F, D, B, C,  E, B, A, F, D, C,  E, D, B, A, F, C,  E, F, D, B, A, C,
- F, A, C, D, E, B,  F, C, D, E, A, B,  F, D, E, A, C, B,  F, E, A, C, D, B},
-// @OH8
-{A, B, D, C, E, F,  A, C, E, B, D, F,  A, D, C, E, B, F,  A, E, B, D, C, F,
- B, A, E, F, D, C,  B, D, A, E, F, C,  B, E, F, D, A, C,  B, F, D, A, E, C,
- C, A, D, F, E, B,  C, D, F, E, A, B,  C, E, A, D, F, B,  C, F, E, A, D, B,
- D, A, B, F, C, E,  D, B, F, C, A, E,  D, C, A, B, F, E,  D, F, C, A, B, E,
- E, A, C, F, B, D,  E, B, A, C, F, D,  E, C, F, B, A, D,  E, F, B, A, C, D,
- F, B, E, C, D, A,  F, C, D, B, E, A,  F, D, B, E, C, A,  F, E, C, D, B, A},
-// @OH9
-{A, B, D, C, F, E,  A, C, F, B, D, E,  A, D, C, F, B, E,  A, F, B, D, C, E,
- B, A, F, E, D, C,  B, D, A, F, E, C,  B, E, D, A, F, C,  B, F, E, D, A, C,
- C, A, D, E, F, B,  C, D, E, F, A, B,  C, E, F, A, D, B,  C, F, A, D, E, B,
- D, A, B, E, C, F,  D, B, E, C, A, F,  D, C, A, B, E, F,  D, E, C, A, B, F,
- E, B, F, C, D, A,  E, C, D, B, F, A,  E, D, B, F, C, A,  E, F, C, D, B, A,
- F, A, C, E, B, D,  F, B, A, C, E, D,  F, C, E, B, A, D,  F, E, B, A, C, D},
-// @OH10
-{A, B, E, C, D, F,  A, C, D, B, E, F,  A, D, B, E, C, F,  A, E, C, D, B, F,
- B, A, D, F, E, C,  B, D, F, E, A, C,  B, E, A, D, F, C,  B, F, E, A, D, C,
- C, A, E, F, D, B,  C, D, A, E, F, B,  C, E, F, D, A, B,  C, F, D, A, E, B,
- D, A, C, F, B, E,  D, B, A, C, F, E,  D, C, F, B, A, E,  D, F, B, A, C, E,
- E, A, B, F, C, D,  E, B, F, C, A, D,  E, C, A, B, F, D,  E, F, C, A, B, D,
- F, B, D, C, E, A,  F, C, E, B, D, A,  F, D, C, E, B, A,  F, E, B, D, C, A},
-// @OH11
-{A, B, F, C, D, E,  A, C, D, B, F, E,  A, D, B, F, C, E,  A, F, C, D, B, E,
- B, A, D, E, F, C,  B, D, E, F, A, C,  B, E, F, A, D, C,  B, F, A, D, E, C,
- C, A, F, E, D, B,  C, D, A, F, E, B,  C, E, D, A, F, B,  C, F, E, D, A, B,
- D, A, C, E, B, F,  D, B, A, C, E, F,  D, C, E, B, A, F,  D, E, B, A, C, F,
- E, B, D, C, F, A,  E, C, F, B, D, A,  E, D, C, F, B, A,  E, F, B, D, C, A,
- F, A, B, E, C, D,  F, B, E, C, A, D,  F, C, A, B, E, D,  F, E, C, A, B, D},
-// @OH12
-{A, B, E, C, F, D,  A, C, F, B, E, D,  A, E, C, F, B, D,  A, F, B, E, C, D,
- B, A, F, D, E, C,  B, D, E, A, F, C,  B, E, A, F, D, C,  B, F, D, E, A, C,
- C, A, E, D, F, B,  C, D, F, A, E, B,  C, E, D, F, A, B,  C, F, A, E, D, B,
- D, B, F, C, E, A,  D, C, E, B, F, A,  D, E, B, F, C, A,  D, F, C, E, B, A,
- E, A, B, D, C, F,  E, B, D, C, A, F,  E, C, A, B, D, F,  E, D, C, A, B, F,
- F, A, C, D, B, E,  F, B, A, C, D, E,  F, C, D, B, A, E,  F, D, B, A, C, E},
-// @OH13
-{A, B, F, C, E, D,  A, C, E, B, F, D,  A, E, B, F, C, D,  A, F, C, E, B, D,
- B, A, E, D, F, C,  B, D, F, A, E, C,  B, E, D, F, A, C,  B, F, A, E, D, C,
- C, A, F, D, E, B,  C, D, E, A, F, B,  C, E, A, F, D, B,  C, F, D, E, A, B,
- D, B, E, C, F, A,  D, C, F, B, E, A,  D, E, C, F, B, A,  D, F, B, E, C, A,
- E, A, C, D, B, F,  E, B, A, C, D, F,  E, C, D, B, A, F,  E, D, B, A, C, F,
- F, A, B, D, C, E,  F, B, D, C, A, E,  F, C, A, B, D, E,  F, D, C, A, B, E},
-// @OH14
-{A, B, D, E, C, F,  A, C, B, D, E, F,  A, D, E, C, B, F,  A, E, C, B, D, F,
- B, A, C, F, D, E,  B, C, F, D, A, E,  B, D, A, C, F, E,  B, F, D, A, C, E,
- C, A, E, F, B, D,  C, B, A, E, F, D,  C, E, F, B, A, D,  C, F, B, A, E, D,
- D, A, B, F, E, C,  D, B, F, E, A, C,  D, E, A, B, F, C,  D, F, E, A, B, C,
- E, A, D, F, C, B,  E, C, A, D, F, B,  E, D, F, C, A, B,  E, F, C, A, D, B,
- F, B, C, E, D, A,  F, C, E, D, B, A,  F, D, B, C, E, A,  F, E, D, B, C, A},
-// @OH15
-{A, B, D, F, C, E,  A, C, B, D, F, E,  A, D, F, C, B, E,  A, F, C, B, D, E,
- B, A, C, E, D, F,  B, C, E, D, A, F,  B, D, A, C, E, F,  B, E, D, A, C, F,
- C, A, F, E, B, D,  C, B, A, F, E, D,  C, E, B, A, F, D,  C, F, E, B, A, D,
- D, A, B, E, F, C,  D, B, E, F, A, C,  D, E, F, A, B, C,  D, F, A, B, E, C,
- E, B, C, F, D, A,  E, C, F, D, B, A,  E, D, B, C, F, A,  E, F, D, B, C, A,
- F, A, D, E, C, B,  F, C, A, D, E, B,  F, D, E, C, A, B,  F, E, C, A, D, B},
-// @OH16
-{A, B, F, D, C, E,  A, C, B, F, D, E,  A, D, C, B, F, E,  A, F, D, C, B, E,
- B, A, C, E, F, D,  B, C, E, F, A, D,  B, E, F, A, C, D,  B, F, A, C, E, D,
- C, A, D, E, B, F,  C, B, A, D, E, F,  C, D, E, B, A, F,  C, E, B, A, D, F,
- D, A, F, E, C, B,  D, C, A, F, E, B,  D, E, C, A, F, B,  D, F, E, C, A, B,
- E, B, C, D, F, A,  E, C, D, F, B, A,  E, D, F, B, C, A,  E, F, B, C, D, A,
- F, A, B, E, D, C,  F, B, E, D, A, C,  F, D, A, B, E, C,  F, E, D, A, B, C},
-// @OH17
-{A, B, E, F, C, D,  A, C, B, E, F, D,  A, E, F, C, B, D,  A, F, C, B, E, D,
- B, A, C, D, E, F,  B, C, D, E, A, F,  B, D, E, A, C, F,  B, E, A, C, D, F,
- C, A, F, D, B, E,  C, B, A, F, D, E,  C, D, B, A, F, E,  C, F, D, B, A, E,
- D, B, C, F, E, A,  D, C, F, E, B, A,  D, E, B, C, F, A,  D, F, E, B, C, A,
- E, A, B, D, F, C,  E, B, D, F, A, C,  E, D, F, A, B, C,  E, F, A, B, D, C,
- F, A, E, D, C, B,  F, C, A, E, D, B,  F, D, C, A, E, B,  F, E, D, C, A, B},
-// @OH18
-{A, B, F, E, C, D,  A, C, B, F, E, D,  A, E, C, B, F, D,  A, F, E, C, B, D,
- B, A, C, D, F, E,  B, C, D, F, A, E,  B, D, F, A, C, E,  B, F, A, C, D, E,
- C, A, E, D, B, F,  C, B, A, E, D, F,  C, D, B, A, E, F,  C, E, D, B, A, F,
- D, B, C, E, F, A,  D, C, E, F, B, A,  D, E, F, B, C, A,  D, F, B, C, E, A,
- E, A, F, D, C, B,  E, C, A, F, D, B,  E, D, C, A, F, B,  E, F, D, C, A, B,
- F, A, B, D, E, C,  F, B, D, E, A, C,  F, D, E, A, B, C,  F, E, A, B, D, C},
-// @OH19
-{A, B, D, E, F, C,  A, D, E, F, B, C,  A, E, F, B, D, C,  A, F, B, D, E, C,
- B, A, F, C, D, E,  B, C, D, A, F, E,  B, D, A, F, C, E,  B, F, C, D, A, E,
- C, B, F, E, D, A,  C, D, B, F, E, A,  C, E, D, B, F, A,  C, F, E, D, B, A,
- D, A, B, C, E, F,  D, B, C, E, A, F,  D, C, E, A, B, F,  D, E, A, B, C, F,
- E, A, D, C, F, B,  E, C, F, A, D, B,  E, D, C, F, A, B,  E, F, A, D, C, B,
- F, A, E, C, B, D,  F, B, A, E, C, D,  F, C, B, A, E, D,  F, E, C, B, A, D},
-// @OH20
-{A, B, D, F, E, C,  A, D, F, E, B, C,  A, E, B, D, F, C,  A, F, E, B, D, C,
- B, A, E, C, D, F,  B, C, D, A, E, F,  B, D, A, E, C, F,  B, E, C, D, A, F,
- C, B, E, F, D, A,  C, D, B, E, F, A,  C, E, F, D, B, A,  C, F, D, B, E, A,
- D, A, B, C, F, E,  D, B, C, F, A, E,  D, C, F, A, B, E,  D, F, A, B, C, E,
- E, A, F, C, B, D,  E, B, A, F, C, D,  E, C, B, A, F, D,  E, F, C, B, A, D,
- F, A, D, C, E, B,  F, C, E, A, D, B,  F, D, C, E, A, B,  F, E, A, D, C, B},
-// @OH21
-{A, B, E, D, F, C,  A, D, F, B, E, C,  A, E, D, F, B, C,  A, F, B, E, D, C,
- B, A, F, C, E, D,  B, C, E, A, F, D,  B, E, A, F, C, D,  B, F, C, E, A, D,
- C, B, F, D, E, A,  C, D, E, B, F, A,  C, E, B, F, D, A,  C, F, D, E, B, A,
- D, A, E, C, F, B,  D, C, F, A, E, B,  D, E, C, F, A, B,  D, F, A, E, C, B,
- E, A, B, C, D, F,  E, B, C, D, A, F,  E, C, D, A, B, F,  E, D, A, B, C, F,
- F, A, D, C, B, E,  F, B, A, D, C, E,  F, C, B, A, D, E,  F, D, C, B, A, E},
-// @OH22
-{A, B, F, D, E, C,  A, D, E, B, F, C,  A, E, B, F, D, C,  A, F, D, E, B, C,
- B, A, E, C, F, D,  B, C, F, A, E, D,  B, E, C, F, A, D,  B, F, A, E, C, D,
- C, B, E, D, F, A,  C, D, F, B, E, A,  C, E, D, F, B, A,  C, F, B, E, D, A,
- D, A, F, C, E, B,  D, C, E, A, F, B,  D, E, A, F, C, B,  D, F, C, E, A, B,
- E, A, D, C, B, F,  E, B, A, D, C, F,  E, C, B, A, D, F,  E, D, C, B, A, F,
- F, A, B, C, D, E,  F, B, C, D, A, E,  F, C, D, A, B, E,  F, D, A, B, C, E},
-// @OH23
-{A, B, E, F, D, C,  A, D, B, E, F, C,  A, E, F, D, B, C,  A, F, D, B, E, C,
- B, A, D, C, E, F,  B, C, E, A, D, F,  B, D, C, E, A, F,  B, E, A, D, C, F,
- C, B, D, F, E, A,  C, D, F, E, B, A,  C, E, B, D, F, A,  C, F, E, B, D, A,
- D, A, F, C, B, E,  D, B, A, F, C, E,  D, C, B, A, F, E,  D, F, C, B, A, E,
- E, A, B, C, F, D,  E, B, C, F, A, D,  E, C, F, A, B, D,  E, F, A, B, C, D,
- F, A, E, C, D, B,  F, C, D, A, E, B,  F, D, A, E, C, B,  F, E, C, D, A, B},
-// @OH24
-{A, B, F, E, D, C,  A, D, B, F, E, C,  A, E, D, B, F, C,  A, F, E, D, B, C,
- B, A, D, C, F, E,  B, C, F, A, D, E,  B, D, C, F, A, E,  B, F, A, D, C, E,
- C, B, D, E, F, A,  C, D, E, F, B, A,  C, E, F, B, D, A,  C, F, B, D, E, A,
- D, A, E, C, B, F,  D, B, A, E, C, F,  D, C, B, A, E, F,  D, E, C, B, A, F,
- E, A, F, C, D, B,  E, C, D, A, F, B,  E, D, A, F, C, B,  E, F, C, D, A, B,
- F, A, B, C, E, D,  F, B, C, E, A, D,  F, C, E, A, B, D,  F, E, A, B, C, D},
-// @OH25
-{A, C, D, E, F, B,  A, D, E, F, C, B,  A, E, F, C, D, B,  A, F, C, D, E, B,
- B, C, F, E, D, A,  B, D, C, F, E, A,  B, E, D, C, F, A,  B, F, E, D, C, A,
- C, A, F, B, D, E,  C, B, D, A, F, E,  C, D, A, F, B, E,  C, F, B, D, A, E,
- D, A, C, B, E, F,  D, B, E, A, C, F,  D, C, B, E, A, F,  D, E, A, C, B, F,
- E, A, D, B, F, C,  E, B, F, A, D, C,  E, D, B, F, A, C,  E, F, A, D, B, C,
- F, A, E, B, C, D,  F, B, C, A, E, D,  F, C, A, E, B, D,  F, E, B, C, A, D},
-// @OH26
-{A, C, D, F, E, B,  A, D, F, E, C, B,  A, E, C, D, F, B,  A, F, E, C, D, B,
- B, C, E, F, D, A,  B, D, C, E, F, A,  B, E, F, D, C, A,  B, F, D, C, E, A,
- C, A, E, B, D, F,  C, B, D, A, E, F,  C, D, A, E, B, F,  C, E, B, D, A, F,
- D, A, C, B, F, E,  D, B, F, A, C, E,  D, C, B, F, A, E,  D, F, A, C, B, E,
- E, A, F, B, C, D,  E, B, C, A, F, D,  E, C, A, F, B, D,  E, F, B, C, A, D,
- F, A, D, B, E, C,  F, B, E, A, D, C,  F, D, B, E, A, C,  F, E, A, D, B, C},
-// @OH27
-{A, C, E, D, F, B,  A, D, F, C, E, B,  A, E, D, F, C, B,  A, F, C, E, D, B,
- B, C, F, D, E, A,  B, D, E, C, F, A,  B, E, C, F, D, A,  B, F, D, E, C, A,
- C, A, F, B, E, D,  C, B, E, A, F, D,  C, E, A, F, B, D,  C, F, B, E, A, D,
- D, A, E, B, F, C,  D, B, F, A, E, C,  D, E, B, F, A, C,  D, F, A, E, B, C,
- E, A, C, B, D, F,  E, B, D, A, C, F,  E, C, B, D, A, F,  E, D, A, C, B, F,
- F, A, D, B, C, E,  F, B, C, A, D, E,  F, C, A, D, B, E,  F, D, B, C, A, E},
-// @OH28
-{A, C, F, D, E, B,  A, D, E, C, F, B,  A, E, C, F, D, B,  A, F, D, E, C, B,
- B, C, E, D, F, A,  B, D, F, C, E, A,  B, E, D, F, C, A,  B, F, C, E, D, A,
- C, A, E, B, F, D,  C, B, F, A, E, D,  C, E, B, F, A, D,  C, F, A, E, B, D,
- D, A, F, B, E, C,  D, B, E, A, F, C,  D, E, A, F, B, C,  D, F, B, E, A, C,
- E, A, D, B, C, F,  E, B, C, A, D, F,  E, C, A, D, B, F,  E, D, B, C, A, F,
- F, A, C, B, D, E,  F, B, D, A, C, E,  F, C, B, D, A, E,  F, D, A, C, B, E},
-// @OH29
-{A, C, E, F, D, B,  A, D, C, E, F, B,  A, E, F, D, C, B,  A, F, D, C, E, B,
- B, C, D, F, E, A,  B, D, F, E, C, A,  B, E, C, D, F, A,  B, F, E, C, D, A,
- C, A, D, B, E, F,  C, B, E, A, D, F,  C, D, B, E, A, F,  C, E, A, D, B, F,
- D, A, F, B, C, E,  D, B, C, A, F, E,  D, C, A, F, B, E,  D, F, B, C, A, E,
- E, A, C, B, F, D,  E, B, F, A, C, D,  E, C, B, F, A, D,  E, F, A, C, B, D,
- F, A, E, B, D, C,  F, B, D, A, E, C,  F, D, A, E, B, C,  F, E, B, D, A, C},
-// @OH30
-{A, C, F, E, D, B,  A, D, C, F, E, B,  A, E, D, C, F, B,  A, F, E, D, C, B,
- B, C, D, E, F, A,  B, D, E, F, C, A,  B, E, F, C, D, A,  B, F, C, D, E, A,
- C, A, D, B, F, E,  C, B, F, A, D, E,  C, D, B, F, A, E,  C, F, A, D, B, E,
- D, A, E, B, C, F,  D, B, C, A, E, F,  D, C, A, E, B, F,  D, E, B, C, A, F,
- E, A, F, B, D, C,  E, B, D, A, F, C,  E, D, A, F, B, C,  E, F, B, D, A, C,
- F, A, C, B, E, D,  F, B, E, A, C, D,  F, C, B, E, A, D,  F, E, A, C, B, D}
-    };
+    private static String superperm =
+        "123456123451623451263451236451326451362451364251364521364512" +
+        "346512341562341526341523641523461523416523412563412536412534" +
+        "612534162534126534123564123546123541623541263541236541326543" +
+        "126453162435162431562431652431625431624531642531462531426531" +
+        "425631425361425316452314652314562314526314523614523164532164" +
+        "531264351264315264312564321564231546231542631542361542316542" +
+        "315642135642153624153621453621543621534621354621345621346521" +
+        "346251346215364215634216534216354216345216342516342156432516" +
+        "432561432564132564312654321654326153426135426134526134256134" +
+        "265134261532465132465312463512463152463125463215463251463254" +
+        "163254613254631245632145632415632451632456132456312465321465" +
+        "324165324615326415326145326154326514362514365214356214352614" +
+        "352164352146352143651243615243612543612453612435612436514235" +
+        "614235164235146235142635142365143265413625413652413562413526" +
+        "41352461352416352413654213654123";
+    // OH1 = 1, OH2 = 2, OH3 = 3, ..., OH10=a, OH11=b, ...,  OH30=u
+    private static String config_ids = "123456789abcdefghijklmnopqrstu";
+    private static String config =
+        "1u9fnm hdsq32 6eabu7 jn5r 7ptglc 189oih 45kqp2 sl3b8e di l3t" +
+        "8eo  ka46gm qrd9jn u7feat 1gicrp ljb572  3fhuom 9cr41g at67f" +
+        "b kopsc8 l1eitn  j6qa2m 4schko fbut6e 328ds5 lk7p 5rqi phc 1" +
+        "mr gq 9anmru d72ejb 6gfkac trl17i pj45 ihn8 5e2ldb suo63f tn" +
+        "71er admjuq 93 dm2 s48khp 59jiqr gmca4f 1hno93 uq6 s4okhc f9" +
+        "a gqkj42 6husm3 d95n 3loe nfr 7clgtp io981h 4fkmc6 st3boe u1" +
+        "a 7cbgtk 6o cbptkl 8235sd e67uba jkqg a9frm1 chpo48 iqn59d 3" +
+        "msuh6 24 msfh 41p9 h53q8d nlrei7 jp2g5k b8tslo ci 8t 1prcig " +
+        "75bjl2 k84sph qi 84o 1mnf9u 3q mna9 qg54jp i71lrt cakfg6 bje" +
+        "27d ur je na1urf tgbc fsmo6h 42pqk5 8b3l 5njidr 7utaef 139on" +
+        "h md6qu2 se d6j 7klgbp 5sq82h 46cmkf ob3tse u2a 7k 6jm2aq 4r" +
+        "p9gi 57dl i318no tubfe6 sdh2 64a j9drqn uhf3 ntie1l 8cspok b" +
+        "f76ta g14rc9 mo 14ic olst8b k5g2pj 7ierln d8q35h 9p 8q 4ig9p" +
+        "r jld75e n813io tpbclk s5h2 kmg j9 4acmgf 17nt f36ous bdl2e5" +
+        " 8nhi39 qujmda re uj6da2 bg";
 
     /**
      * Create a new octahedral configuration.
@@ -302,8 +124,10 @@ public final class Octahedral extends AbstractStereo<IAtom,IAtom> {
             throw new IllegalArgumentException(
                 "Invalid config order: " + cfg + ", octahedral should be"
                 + "1 <= order <= 30!");
+        char c  = config_ids.charAt(cfg-1);
+        int idx = config.indexOf(c);
         IAtom[] carriers = invapply(getCarriers().toArray(new IAtom[6]),
-                                    PERMUTATIONS[cfg-1]);
+                                    superperm.substring(idx, idx+6));
         return new Octahedral(getFocus(), carriers, 1);
     }
 
